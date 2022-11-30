@@ -32,7 +32,11 @@ Ainda sobre a autenticação, foram implementados vários serviços e classes qu
 
 Nesta tela, existe uma tabela (recurso do Agular Material), que carrega todos os agendamentos do paciente, listando nome do profissional, datas e o status desse profissional.
 
-Como melhorias, poderia haver um formulário que filtrasse os resultados por profissional e datas.
+Como melhorias, poderia haver um formulário que filtrasse os resultados por profissional e datas. Além disso, seria usada paginação dos resultados da tabela, assim como o seu lazy loading.
+
+Existia um botão de Buscar, que atualizava os dados da tabela sob demanda, mas tablea fornecida pelo Angular Material é na verdade complexa de se trabalhar. As soluções disponíveis no StackOverflow não funcionaram nesse projeto a respeito de carregamento de resultados.
+
+Por isso, todos os dados disponíveis na base são carregados na tabela assim que a tela é carregada.
 
 ## Componentes que não foram implementados
 ### Tela de criação de novos agendamentos
