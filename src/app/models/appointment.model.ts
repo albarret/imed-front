@@ -4,6 +4,7 @@ export interface Appointment {
     ProfessionalId?: number,
     patientName?: string,
     professionalName?: string,
+    stauts?: string,
     begining?: string,
     ending?: string
 }

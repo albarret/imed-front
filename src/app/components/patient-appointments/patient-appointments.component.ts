@@ -1,40 +1,48 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, ViewChild } from '@angular/core';
 import { Appointment } from 'src/app/models/appointment.model';
 import { FormBuilder, Validators } from '@angular/forms';
 import { AppointmentService } from 'src/app/services/appointment.service';
 import { AuthService } from 'src/app/authorization/auth.service';
 import { Patient } from 'src/app/models/patient.model';
-import { MatTableDataSource } from '@angular/material/table';
+import { OnInit } from '@angular/core';
 import { map, of } from 'rxjs';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-patient-appointments',
   templateUrl: './patient-appointments.component.html',
   styleUrls: ['./patient-appointments.component.scss']
 })
-export class PatientAppointmentsComponent {
-  appointments: MatTableDataSource<Appointment> = new MatTableDataSource<Appointment>([]);
+export class PatientAppointmentsComponent implements OnInit {
+  appointments: Appointment[] = [];
 
   displayedColumns = [
-    'patient', 'professional', 'begining', 'ending'
+    'professional', 'begining', 'ending', 'status'
   ]
 
   constructor(
     private appointmentService: AppointmentService,
-    private authService: AuthService
+    private authService: AuthService,
+    private changeDetectorRef: ChangeDetectorRef
   ) {  }
 
-  fetchAppointments() {
+  ngOnInit() {
     const patient: Patient = this.authService.getUserLogedIn();
     this.appointmentService.fetchAppointmentsForPatient(patient.id)
       .pipe(
         map((response) => {
-          const datasource = this.appointments;
-          if(response) {
-            datasource.data = response as Appointment[];
-          }
-          return datasource;
+            return response.map((apt) => {
+              apt.begining = moment(apt.begining).add('hours', 3).format('DD/MM/YYYY HH:mm');
+              apt.ending = moment(apt.ending).add('hours', 3).format('DD/MM/YYYY HH:mm');
+              return apt;
+          }); 
         })
-      );
+      )
+      .subscribe((response) => {
+        this.appointments = response;
+      })
   }
+
+  fetchAppointments() { }
+    
 }
